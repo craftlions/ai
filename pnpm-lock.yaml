@@ -19,7 +19,7 @@ importers:
         version: 2.1.4
       '@nanostores/persistent':
         specifier: 1.1.0
-        version: 1.1.0(nanostores@1.0.1)
+        version: 1.1.0(nanostores@1.1.0)
       '@size-limit/file':
         specifier: 11.2.0
         version: 11.2.0(size-limit@11.2.0)
@@ -51,8 +51,8 @@ importers:
         specifier: 5.1.5
         version: 5.1.5
       nanostores:
-        specifier: 1.0.1
-        version: 1.0.1
+        specifier: 1.1.0
+        version: 1.1.0
       size-limit:
         specifier: 11.2.0
         version: 11.2.0
@@ -1898,8 +1898,8 @@ packages:
   nanospinner@1.2.2:
     resolution: {integrity: sha512-Zt/AmG6qRU3e+WnzGGLuMCEAO/dAu45stNbHY223tUxldaDAeE+FxSPsd9Q+j+paejmm0ZbrNVs5Sraqy3dRxA==}
 
-  nanostores@1.0.1:
-    resolution: {integrity: sha512-kNZ9xnoJYKg/AfxjrVL4SS0fKX++4awQReGqWnwTRHxeHGZ1FJFVgTqr/eMrNQdp0Tz7M7tG/TDaX8QfHDwVCw==}
+  nanostores@1.1.0:
+    resolution: {integrity: sha512-yJBmDJr18xy47dbNVlHcgdPrulSn1nhSE6Ns9vTG+Nx9VPT6iV1MD6aQFp/t52zpf82FhLLTXAXr30NuCnxvwA==}
     engines: {node: ^20.0.0 || >=22.0.0}
 
   neotraverse@0.6.18:
@@ -3241,9 +3241,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@nanostores/persistent@1.1.0(nanostores@1.0.1)':
+  '@nanostores/persistent@1.1.0(nanostores@1.1.0)':
     dependencies:
-      nanostores: 1.0.1
+      nanostores: 1.1.0
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -4619,7 +4619,7 @@ snapshots:
     dependencies:
       picocolors: 1.1.1
 
-  nanostores@1.0.1: {}
+  nanostores@1.1.0: {}
 
   neotraverse@0.6.18: {}
 
