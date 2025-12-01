@@ -21,8 +21,8 @@ importers:
         specifier: 1.1.0
         version: 1.1.0(nanostores@1.0.1)
       '@size-limit/file':
-        specifier: 11.2.0
-        version: 11.2.0(size-limit@11.2.0)
+        specifier: 12.0.0
+        version: 12.0.0(size-limit@11.2.0)
       '@types/node':
         specifier: 24.2.1
         version: 24.2.1
@@ -997,11 +997,11 @@ packages:
     resolution: {integrity: sha512-d9xRovfKNz1SKieM0qJdO+PQonjnnIfSNWfHYnBSJ9hkjm0ZPw6HlxscDXYstp3z+7V2GOFHc+J0CYrYTjqCJw==}
     engines: {node: '>=18'}
 
-  '@size-limit/file@11.2.0':
-    resolution: {integrity: sha512-OZHE3putEkQ/fgzz3Tp/0hSmfVo3wyTpOJSRNm6AmcwX4Nm9YtTfbQQ/hZRwbBFR23S7x2Sd9EbqYzngKwbRoA==}
-    engines: {node: ^18.0.0 || >=20.0.0}
+  '@size-limit/file@12.0.0':
+    resolution: {integrity: sha512-OzKYpDzWJ2jo6cAIzVsaPuvzZTmMLDoVCViEvsctmImxpXzwJZcuBEpPohFKKdgVdZuNTU8WstmvywPq55Njdw==}
+    engines: {node: ^20.0.0 || ^22.0.0 || >=24.0.0}
     peerDependencies:
-      size-limit: 11.2.0
+      size-limit: 12.0.0
 
   '@speed-highlight/core@1.2.7':
     resolution: {integrity: sha512-0dxmVj4gxg3Jg879kvFS/msl4s9F3T9UXC1InxgOf7t5NvcPD97u/WTA5vL/IxWHMn7qSxBozqrnnE2wvl1m8g==}
@@ -3374,7 +3374,7 @@ snapshots:
 
   '@sindresorhus/is@7.0.2': {}
 
-  '@size-limit/file@11.2.0(size-limit@11.2.0)':
+  '@size-limit/file@12.0.0(size-limit@11.2.0)':
     dependencies:
       size-limit: 11.2.0
 
