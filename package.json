@@ -34,5 +34,5 @@
 		"typescript": "5.9.2",
 		"wrangler": "4.29.1"
 	},
-	"packageManager": "pnpm@10.14.0"
+	"packageManager": "pnpm@10.27.0"
 }
