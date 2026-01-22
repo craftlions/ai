@@ -32,7 +32,7 @@
 		"nanostores": "1.0.1",
 		"size-limit": "11.2.0",
 		"typescript": "5.9.2",
-		"wrangler": "4.29.1"
+		"wrangler": "4.59.1"
 	},
 	"packageManager": "pnpm@10.14.0"
 }
