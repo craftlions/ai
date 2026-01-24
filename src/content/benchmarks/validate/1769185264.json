@@ -1,0 +1,13 @@
+{
+	"$schema": "../../../../.astro/collections/validateBench.schema.json",
+	"datetime": "2026-01-23T16:21:04.152Z",
+	"qwen/qwen2.5-vl-72b-instruct": 2832,
+	"qwen/qwen3-vl-32b-instruct": 4372,
+	"google/gemini-2.5-flash": 2194,
+	"google/gemini-3-flash-preview": 1620,
+	"openai/chatgpt-4o-latest": 2024,
+	"openai/gpt-4o-mini": 1984,
+	"openai/gpt-5-chat": 1477,
+	"openai/gpt-5.1-chat": 2195,
+	"anthropic/claude-sonnet-4.5": 5520
+}

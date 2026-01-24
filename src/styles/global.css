@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme inline {
+	--font-silkscreen: var(--font-silkscreen);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition {
+		navigation: auto;
+	}
+}
