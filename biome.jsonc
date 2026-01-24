@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -12,15 +12,28 @@
 	"formatter": {
 		"enabled": true
 	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
+	"html": {
+		"experimentalFullSupportEnabled": true,
+		"formatter": {
+			"enabled": true,
+			"indentScriptAndStyle": true
+		}
+	},
 	"assist": {
 		"enabled": true,
 		"actions": {
 			"recommended": true,
 			"source": {
+				"recommended": true,
 				"organizeImports": {
 					"level": "on",
 					"options": {
-						"groups": [{ "type": true }, ":BLANK_LINE:"]
+						"groups": [{ "type": true }]
 					}
 				}
 			}
@@ -29,15 +42,18 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
-		},
-		"domains": {
-			"project": "recommended"
+			"recommended": true,
+			"nursery": {
+				"useSortedClasses": "warn"
+			}
 		}
+		// "domains": {
+		// 	"project": "recommended"
+		// }
 	},
 	"overrides": [
 		{
-			"includes": ["**/*.astro"],
+			"includes": ["**/*.svelte", "**/*.astro", "**/*.vue"],
 			"linter": {
 				"rules": {
 					"style": {
@@ -47,17 +63,6 @@
 					"correctness": {
 						"noUnusedVariables": "off",
 						"noUnusedImports": "off"
-					}
-				}
-			},
-			"assist": {
-				"enabled": true,
-				"actions": {
-					"recommended": true,
-					"source": {
-						"organizeImports": {
-							"level": "off"
-						}
 					}
 				}
 			}

@@ -1,0 +1,414 @@
+---
+export const prerender = false;
+
+import { getCollection } from "astro:content";
+import Logo from "../assets/logoWithText.svg";
+import Layout from "../layouts/Layout.astro";
+
+const benchEntries = await getCollection("validateBench");
+
+const today = new Date();
+today.setHours(23, 59, 59, 999);
+
+const sevenDaysAgo = new Date(today);
+sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+sevenDaysAgo.setHours(0, 0, 0, 0);
+
+const sortedEntries = benchEntries
+	.filter((entry) => {
+		const entryDate = new Date(entry.data.datetime);
+		return entryDate >= sevenDaysAgo && entryDate <= today;
+	})
+	.sort(
+		(a, b) =>
+			new Date(a.data.datetime).getTime() - new Date(b.data.datetime).getTime(),
+	);
+
+// Model configuration: key, display name, line color, point color
+const modelConfig = [
+	{
+		key: "qwen/qwen2.5-vl-72b-instruct",
+		name: "Qwen 2.5 VL 72B Instruct",
+		lineColor: "stroke-violet-500",
+		pointColor: "text-violet-400",
+		bgColor: "bg-violet-500",
+	},
+	{
+		key: "qwen/qwen3-vl-32b-instruct",
+		name: "Qwen 3 VL 32B Instruct",
+		lineColor: "stroke-orange-400",
+		pointColor: "text-orange-300",
+		bgColor: "bg-orange-400",
+	},
+	{
+		key: "google/gemini-2.5-flash",
+		name: "Gemini 2.5 Flash",
+		lineColor: "stroke-cyan-400",
+		pointColor: "text-cyan-300",
+		bgColor: "bg-cyan-400",
+	},
+	{
+		key: "google/gemini-3-flash-preview",
+		name: "Gemini 3 Flash",
+		lineColor: "stroke-fuchsia-500",
+		pointColor: "text-fuchsia-400",
+		bgColor: "bg-fuchsia-500",
+	},
+	{
+		key: "openai/chatgpt-4o-latest",
+		name: "GPT-4o",
+		lineColor: "stroke-emerald-400",
+		pointColor: "text-emerald-300",
+		bgColor: "bg-emerald-400",
+	},
+	{
+		key: "openai/gpt-4o-mini",
+		name: "GPT-4o Mini",
+		lineColor: "stroke-lime-400",
+		pointColor: "text-lime-300",
+		bgColor: "bg-lime-400",
+	},
+	{
+		key: "openai/gpt-5-chat",
+		name: "GPT-5",
+		lineColor: "stroke-red-400",
+		pointColor: "text-red-300",
+		bgColor: "bg-red-400",
+	},
+	{
+		key: "openai/gpt-5.1-chat",
+		name: "GPT-5.1",
+		lineColor: "stroke-rose-400",
+		pointColor: "text-rose-300",
+		bgColor: "bg-rose-400",
+	},
+	{
+		key: "anthropic/claude-sonnet-4.5",
+		name: "Claude Sonnet 4.5",
+		lineColor: "stroke-amber-400",
+		pointColor: "text-amber-300",
+		bgColor: "bg-amber-400",
+	},
+] as const;
+
+// Generate data arrays for each model for chart (filtered by time range)
+const datasets = modelConfig.map((model) => ({
+	...model,
+	data: sortedEntries
+		.filter((entry) => entry.data[model.key] != null)
+		.map((entry) => ({
+			date: new Date(entry.data.datetime),
+			value: entry.data[model.key] as number,
+		})),
+}));
+
+// Calculate averages for each model using ALL data (not just time range)
+const averages = modelConfig.map((model) => {
+	const allModelValues = benchEntries
+		.filter((entry) => entry.data[model.key] != null)
+		.map((entry) => entry.data[model.key] as number);
+	return {
+		...model,
+		avg:
+			allModelValues.length > 0
+				? Math.round(
+						allModelValues.reduce((sum, v) => sum + v, 0) /
+							allModelValues.length,
+					)
+				: null,
+	};
+});
+
+import { curveBumpX, line as d3_line, scaleLinear, scaleTime } from "d3";
+
+// Generate array of days for X-axis (at 12:00 midday each day)
+const xAxisDays = Array.from({ length: 8 }, (_, i) => {
+	const date = new Date(sevenDaysAgo);
+	date.setDate(date.getDate() + i);
+	return date;
+});
+
+// Get min and max values across all datasets for dynamic Y scale
+const allValues = datasets.flatMap((dataset) =>
+	dataset.data.map((d) => d.value),
+);
+const maxValue = allValues.length > 0 ? Math.max(...allValues) : 1000;
+
+// Calculate dynamic tick count based on value range
+// Aim for ~100ms intervals, with min 5 and max 10 ticks
+const preferredStep = 100;
+const tickCount = Math.min(
+	10,
+	Math.max(5, Math.ceil(maxValue / preferredStep)),
+);
+
+let xScale = scaleTime().domain([sevenDaysAgo, today]).range([0, 100]);
+let yScale = scaleLinear()
+	.domain([0, Math.ceil(maxValue * 1.1)])
+	.nice(tickCount)
+	.range([100, 0]);
+
+let line = d3_line<{ date: Date; value: number }>()
+	.x((d) => xScale(d.date))
+	.y((d) => yScale(d.value))
+	.curve(curveBumpX);
+
+// Generate line paths for each dataset (only for datasets with data)
+const lines = datasets
+	.filter((dataset) => dataset.data.length > 0)
+	.map((dataset) => ({
+		...dataset,
+		path: line(dataset.data),
+	}));
+---
+
+<Layout
+	title="Bench"
+	ogTitle="craftlions ai - Bench AI. With Style."
+	ogDescription="Visualize AI Benchmarks in 8-bit retro style. See how different Models perform in different tests and over time. Spoiler: This is just a visualization, and if you don't know why you want to look at it, you probably don't need it."
+	ogImage="https://craftlions.ai/craftlions_ai_bench_dark_og.png"
+>
+	<div
+		class="min-h-dvh grid grid-cols-[minmax(1rem,1fr)_minmax(0,8fr)_minmax(1rem,1fr)] grid-rows-[auto_auto_1fr] gap-y-6"
+	>
+		<div class="col-start-2 justify-self-center pt-6"><a href="/">
+			<Logo
+				transition:name="logo"
+				class="w-10 h-10 text-current dark:text-white"
+			/>
+		</a></div>
+		<section class="col-start-2 flex flex-col gap-4 py-4">
+			<!-- Benchmark Tabs -->
+			<div class="flex gap-3">
+				<button
+					class="px-4 py-2 text-sm font-silkscreen font-bold bg-green-500 text-neutral-900 border-4 border-green-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
+				>
+					[ Validation Speed ]
+				</button>
+				<button
+					class="px-4 py-2 text-sm font-silkscreen font-bold bg-neutral-700 text-neutral-500 border-4 border-neutral-600 cursor-not-allowed opacity-60"
+					disabled
+				>
+					[ Coming Soon ]
+				</button>
+			</div>
+			<!-- Benchmark Description Card -->
+			<div
+				class="flex-1 flex flex-col bg-neutral-100 dark:bg-neutral-950 border-4 border-neutral-300 dark:border-neutral-600 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)]"
+			>
+				<!-- Window Title Bar -->
+				<div
+					class="flex items-center gap-2 px-3 py-2 bg-neutral-200 dark:bg-neutral-900 border-b-4 border-neutral-300 dark:border-neutral-600"
+				>
+					<div class="flex gap-1.5">
+						<span class="w-3 h-3 bg-red-500 border-2 border-red-700"></span>
+						<span
+							class="w-3 h-3 bg-yellow-500 border-2 border-yellow-700"
+						></span>
+						<span class="w-3 h-3 bg-green-500 border-2 border-green-700"></span>
+					</div>
+					<span
+						class="text-xs font-silkscreen text-neutral-500 dark:text-neutral-400 ml-2"
+						>benchmark.info</span
+					>
+				</div>
+				<!-- Window Content -->
+				<div class="flex-1 p-4 font-silkscreen text-xs">
+					<p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+						This benchmark measures how quickly different AI models can validate
+						extracted data. The model receives an image containing technical
+						information alongside text that was previously extracted from it. It
+						then verifies whether all extracted data actually exists in the
+						image and checks for correctness—including values, content accuracy,
+						and potential typos. The goal is to achieve near real-time feedback
+						for production use.
+					</p>
+					<span
+						class="text-green-600 dark:text-green-400 mt-3 block animate-pulse"
+						>█</span
+					>
+				</div>
+				<!-- Window Footer -->
+				<div
+					class="px-4 py-3 bg-neutral-200 dark:bg-neutral-900 border-t-4 border-neutral-300 dark:border-neutral-600 font-silkscreen text-xs overflow-x-auto"
+				>
+					<div
+						class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2"
+					>
+						{averages.filter((model) => model.avg != null).map((model) => (
+							<div
+								class={`flex items-center gap-1 ${(model.avg as number) <= 2000 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}
+							>
+								<span class={`w-2 h-2 ${model.bgColor} shrink-0`}></span>
+								<span class="whitespace-nowrap"
+									>{model.name}: <span class="tabular-nums">{model.avg}ms</span></span
+								>
+							</div>
+						))}
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="col-start-2 flex flex-col min-h-75">
+			<!-- Chart Container -->
+			<div class="chart-container flex-1 flex flex-col">
+				<!-- Chart Area -->
+				<div
+					class="@container relative flex-1 w-full p-4 min-h-62.5"
+					style={{
+					"--marginTop": "0px",
+					"--marginRight": "8px",
+					"--marginBottom": "25px",
+					"--marginLeft": "25px",
+				}}
+				>
+					<!-- XAxis -->
+					<svg
+						class="absolute inset-0 h-[calc(100%-var(--marginTop))] w-[calc(100%-var(--marginLeft)-var(--marginRight))] translate-x-(--marginLeft) translate-y-(--marginTop) overflow-visible"
+					>
+						{xAxisDays.map((day, i) => (
+					<g class="overflow-visible font-silkscreen text-neutral-500 dark:text-neutral-400">
+							<text
+								x={`${xScale(day)}%`}
+								y="100%"
+								text-anchor="middle"
+								fill="currentColor"
+								class={`text-sm ${i % 8 === 0 ? "inline" : i % 4 === 0 ? "@2xs:inline hidden" : i % 2 === 0 ? "@xs:inline hidden" : "@sm:inline hidden"}`}
+							>
+								{day.toLocaleDateString("de-DE", {month: "numeric", day: "numeric"})}
+							</text>
+						</g>
+					))}
+					</svg>
+					<!-- /XAxis -->
+					<!-- YAxis -->
+					<svg
+						class="absolute inset-0 h-[calc(100%-var(--marginTop)-var(--marginBottom))] translate-y-(--marginTop) overflow-visible"
+					>
+						<g
+							class="translate-x-4 font-silkscreen text-neutral-500 dark:text-neutral-400"
+						>
+							{yScale
+							.ticks(tickCount)
+							.map(value => (
+								<text
+									y={`${yScale(value)}%`}
+									alignment-baseline="middle"
+									text-anchor="end"
+									class="text-xs tabular-nums"
+									fill="currentColor"
+								>
+									{Math.round(value)}
+								</text>
+							))}
+						</g>
+					</svg>
+					<!-- /YAxis -->
+					<!-- ChartArea -->
+					<div
+						class="absolute inset-0 h-[calc(100%-var(--marginTop)-var(--marginBottom))] w-[calc(100%-var(--marginLeft)-var(--marginRight))] translate-x-(--marginLeft) translate-y-(--marginTop) overflow-visible"
+					>
+						<!-- Data -->
+						<svg
+							viewBox="0 0 100 100"
+							class="overflow-visible w-full h-full"
+							preserveAspectRatio="none"
+						>
+							<!-- GridLines -->
+							<!-- Optimal Zone (0-500ms) -->
+							<line
+								x1="0"
+								y1={yScale(500)}
+								x2="100"
+								y2={yScale(500)}
+								class="stroke-green-500"
+								stroke-width="2"
+								stroke-dasharray="8 4"
+								vector-effect="non-scaling-stroke"
+							/>
+							<!-- Limit Line -->
+							<line
+								x1="0"
+								y1={yScale(2000)}
+								x2="100"
+								y2={yScale(2000)}
+								class="stroke-red-500"
+								stroke-width="2"
+								stroke-dasharray="8 4"
+								vector-effect="non-scaling-stroke"
+							/>
+							<!-- /GridLines -->
+							{lines.map((model, i) => (
+								<g data-model={i} class="chart-line transition-opacity duration-200">
+									<!-- Line -->
+									<path
+										d={model.path}
+										fill="none"
+										class={model.lineColor}
+										stroke-width="4"
+										stroke-opacity="0.9"
+										vector-effect="non-scaling-stroke"
+									/>
+									<!-- Points -->
+									{model.data.map((d) => (
+										<path 
+											d={`M ${xScale(d.date)} ${yScale(d.value)} l 0.0001 0`}
+											vector-effect="non-scaling-stroke"
+											stroke-width="12"
+											stroke-linecap="square"
+											fill="none"
+											stroke="currentColor"
+											class={model.pointColor}
+										/>
+									))}
+								</g>
+							))}
+						</svg>
+					</div>
+					<!-- /ChartArea -->
+				</div>
+				<!-- Legend -->
+				<div class="chart-legend flex justify-center items-center gap-8 py-3">
+					{modelConfig.map((model, i) => (
+						<div class="legend-item flex items-center gap-2 cursor-pointer" data-model={i}>
+							<span class={`w-3 h-3 ${model.bgColor}`}></span>
+							<span
+								class="text-xs font-silkscreen text-neutral-600 dark:text-neutral-400"
+								>{model.name}</span
+							>
+						</div>
+					))}
+				</div>
+			</div>
+			<!-- /Chart Container -->
+		</section>
+	</div>
+</Layout>
+
+<style>
+	/* When hovering any legend item, dim all chart lines */
+	.chart-container:has(.legend-item:hover) .chart-line {
+		opacity: 0.15;
+	}
+	/* Keep the hovered model's line fully visible */
+	.chart-container:has(.legend-item[data-model="0"]:hover)
+	.chart-line[data-model="0"],
+	.chart-container:has(.legend-item[data-model="1"]:hover)
+		.chart-line[data-model="1"],
+	.chart-container:has(.legend-item[data-model="2"]:hover)
+		.chart-line[data-model="2"],
+	.chart-container:has(.legend-item[data-model="3"]:hover)
+		.chart-line[data-model="3"],
+	.chart-container:has(.legend-item[data-model="4"]:hover)
+		.chart-line[data-model="4"],
+	.chart-container:has(.legend-item[data-model="5"]:hover)
+		.chart-line[data-model="5"],
+	.chart-container:has(.legend-item[data-model="6"]:hover)
+		.chart-line[data-model="6"],
+	.chart-container:has(.legend-item[data-model="7"]:hover)
+		.chart-line[data-model="7"],
+	.chart-container:has(.legend-item[data-model="8"]:hover)
+		.chart-line[data-model="8"] {
+		opacity: 1;
+	}
+</style>

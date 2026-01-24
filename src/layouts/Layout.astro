@@ -1,22 +1,40 @@
 ---
+import "../styles/global.css";
 
+import { Font } from "astro:assets";
+
+interface Props {
+	title: string;
+	ogTitle?: string;
+	ogDescription?: string;
+	ogImage?: string;
+}
+const { title, ogTitle, ogDescription, ogImage } = Astro.props;
 ---
 
-<!doctype html>
 <html lang="en">
 	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="robots" content="noindex,nofollow" />
-		<title>Craftlion's AI Tools</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{title}</title>
+		<meta name="description" content="">
+
+		<meta property="og:url" content="https://craftlions.ai/">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content={ogTitle ?? "craftlions ai"}>
+		<meta property="og:description" content={ogDescription ?? ""}>
+		<meta property="og:image" content={ogImage ?? ""}>
+
+		<meta name="twitter:card" content="summary_large_image">
+		<meta property="twitter:domain" content="craftlions.ai">
+		<meta property="twitter:url" content="https://craftlions.ai/">
+		<meta name="twitter:title" content={ogTitle ?? "craftlions ai"}>
+		<meta name="twitter:description" content={ogDescription ?? ""}>
+		<meta name="twitter:image" content={ogImage ?? ""}>
+
+		<Font cssVariable="--font-silkscreen" preload />
 	</head>
-	<body>
+	<body class="bg-neutral-50 dark:bg-neutral-950">
 		<slot />
 	</body>
 </html>
-
-<script>
-	import "htmx.org";
-</script>

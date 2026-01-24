@@ -1,0 +1,14 @@
+{
+	"$schema": "../../../../.astro/collections/validateBench.schema.json",
+	"datetime": "2026-01-17T00:00:00.000Z",
+	"qwen/qwen2.5-vl-72b-instruct": 4219,
+	"qwen/qwen3-vl-32b-instruct": 2054,
+	"google/gemini-2.5-flash": 1664,
+	"google/gemini-2.5-flash-lite": 2000,
+	"google/gemini-3-flash-preview": 1618,
+	"openai/chatgpt-4o-latest": 1456,
+	"openai/gpt-4.1": 2111,
+	"openai/gpt-5-chat": 1424,
+	"openai/gpt-5.2-chat": 3671,
+	"bytedance-seed/seed-1.6": 2761
+}

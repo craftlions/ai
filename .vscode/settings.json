@@ -1,5 +1,6 @@
 {
 	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.experimental.useTsgo": true,
 	"[typescript]": {
 		"editor.defaultFormatter": "biomejs.biome"
 	},
@@ -16,7 +17,7 @@
 		"editor.defaultFormatter": "biomejs.biome"
 	},
 	"[astro]": {
-		"editor.defaultFormatter": "astro-build.astro-vscode"
+		"editor.defaultFormatter": "biomejs.biome"
 	},
 	"astro.content-intellisense": true
 }

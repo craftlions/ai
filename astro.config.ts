@@ -1,12 +1,32 @@
 import cloudflare from "@astrojs/cloudflare";
-import { defineConfig } from "astro/config";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig, fontProviders } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import browserslist from "browserslist";
-import { browserslistToTargets } from "lightningcss";
+import { browserslistToTargets, Features } from "lightningcss";
 
 export default defineConfig({
-	site: "https://ai.craftlions.com",
-	adapter: cloudflare(),
+	site: "https://craftlions.ai",
+	adapter: cloudflare({
+		imageService: "cloudflare-binding",
+	}),
+	compressHTML: false,
+	experimental: {
+		contentIntellisense: true,
+		svgo: true,
+		chromeDevtoolsWorkspace: true,
+		fonts: [
+			{
+				provider: fontProviders.fontsource(),
+				name: "Silkscreen",
+				cssVariable: "--font-silkscreen",
+			},
+		],
+	},
+	integrations: [expressiveCode()],
+	devToolbar: {
+		enabled: false,
+	},
 	vite: {
 		css: {
 			transformer: "lightningcss",
@@ -21,21 +41,12 @@ export default defineConfig({
 						"unreleased versions",
 					]),
 				),
-				drafts: {
-					customMedia: true,
-				},
 			},
 		},
 		build: {
 			minify: false,
 			cssMinify: false,
 		},
+		plugins: [tailwindcss()],
 	},
-	compressHTML: false,
-	experimental: {
-		contentIntellisense: true,
-		liveContentCollections: true,
-		preserveScriptOrder: true,
-	},
-	integrations: [expressiveCode()],
 });
