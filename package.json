@@ -12,19 +12,15 @@
 		"build": "astro build",
 		"preview": "astro build && astro preview",
 		"deploy": "astro build && wrangler deploy",
-		"bench": "node --env-file=.env scripts/bench.ts"
+		"bench": "node --env-file=.env scripts/bench.ts",
+		"update": "update-browserslist-db latest"
 	},
-	"devDependencies": {
-		"@antfu/nip": "0.1.1",
+	"dependencies": {
 		"@astrojs/check": "0.9.7-beta.1",
 		"@astrojs/cloudflare": "13.0.0-beta.1",
-		"@biomejs/biome": "2.3.12",
-		"@openrouter/sdk": "^0.3.14",
+		"@openrouter/sdk": "0.4.0",
 		"@tailwindcss/vite": "4.1.18",
-		"@types/d3": "7.4.3",
-		"@types/node": "25.0.10",
-		"@typescript/native-preview": "7.0.0-dev.20260124.1",
-		"astro": "6.0.0-beta.1",
+		"astro": "6.0.0-beta.3",
 		"astro-expressive-code": "0.41.6",
 		"browserslist": "4.28.1",
 		"d3": "7.9.0",
@@ -32,5 +28,12 @@
 		"lightningcss": "1.31.1",
 		"tailwindcss": "4.1.18",
 		"wrangler": "4.60.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.12",
+		"@types/d3": "7.4.3",
+		"@types/node": "25.0.10",
+		"@typescript/native-preview": "7.0.0-dev.20260124.1",
+		"update-browserslist-db": "1.2.3"
 	}
 }

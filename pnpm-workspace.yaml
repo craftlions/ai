@@ -1,6 +1,11 @@
+ignoredBuiltDependencies:
+  - "@openrouter/sdk"
+
 onlyBuiltDependencies:
   - esbuild
   - lefthook
   - protobufjs
   - sharp
   - workerd
+
+verifyDepsBeforeRun: "prompt"
