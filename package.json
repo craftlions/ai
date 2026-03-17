@@ -32,7 +32,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.3.12",
 		"@types/d3": "7.4.3",
-		"@types/node": "25.0.10",
+		"@types/node": "25.5.0",
 		"@typescript/native-preview": "7.0.0-dev.20260314.1",
 		"update-browserslist-db": "1.2.3"
 	}
