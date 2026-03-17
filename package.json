@@ -25,7 +25,7 @@
 		"browserslist": "4.28.1",
 		"d3": "7.9.0",
 		"lefthook": "2.0.15",
-		"lightningcss": "1.31.1",
+		"lightningcss": "1.32.0",
 		"tailwindcss": "4.1.18",
 		"wrangler": "4.60.0"
 	},
