@@ -19,14 +19,14 @@
 		"@astrojs/check": "0.9.7-beta.1",
 		"@astrojs/cloudflare": "13.0.0-beta.1",
 		"@openrouter/sdk": "0.4.0",
-		"@tailwindcss/vite": "4.1.18",
+		"@tailwindcss/vite": "4.2.2",
 		"astro": "6.0.0-beta.3",
 		"astro-expressive-code": "0.41.6",
 		"browserslist": "4.28.1",
 		"d3": "7.9.0",
 		"lefthook": "2.0.15",
 		"lightningcss": "1.31.1",
-		"tailwindcss": "4.1.18",
+		"tailwindcss": "4.2.2",
 		"wrangler": "4.60.0"
 	},
 	"devDependencies": {
