@@ -27,7 +27,7 @@
 		"lefthook": "2.0.15",
 		"lightningcss": "1.31.1",
 		"tailwindcss": "4.1.18",
-		"wrangler": "4.60.0"
+		"wrangler": "4.77.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.12",
