@@ -22,7 +22,7 @@
 		"@tailwindcss/vite": "4.1.18",
 		"astro": "6.0.0-beta.3",
 		"astro-expressive-code": "0.41.6",
-		"browserslist": "4.28.1",
+		"browserslist": "4.28.7",
 		"d3": "7.9.0",
 		"lefthook": "2.0.15",
 		"lightningcss": "1.31.1",
